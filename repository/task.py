@@ -1,9 +1,11 @@
 from sqlalchemy import select, delete, update
 from sqlalchemy.orm import Session
+from models import Tasks, Categories
 from schema.task import TaskCreate, Task
-from database import *
+
 
 class TaskRepository:
+    
     def __init__(self, db_session: Session):
         self.db_session = db_session
 
