@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     CACHE_HOST: str = 'localhost'
     CACHE_PORT: int = 6379
     CAHCE_DB: int = 0
+    JWT_SECRET_KEY: str = 'secret_key'
+    JWT_ENCODE_ALGORITHM: str = 'HS256'
 
     @property
     def db_url(self):

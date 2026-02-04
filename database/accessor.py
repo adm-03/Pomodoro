@@ -10,4 +10,4 @@ engine = create_engine(settings.db_url)
 SessionLocal = sessionmaker(engine)
 
 def get_db_session() -> Session:
-    return SessionLocal()  
+    return SessionLocal

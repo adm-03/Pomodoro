@@ -10,43 +10,51 @@ class TaskRepository:
         self.db_session = db_session
 
     def get_tasks(self):
-        with self.db_session as session:
+        with self.db_session()as session:
             task = session.execute(select(Tasks)).scalars().all()            
         return task
     
     
     def get_task(self,  task_id) -> Tasks | None:
-        with self.db_session as session:
+        with self.db_session()as session:
             task = session.execute(select(Tasks).where(Tasks.id == task_id)).scalar_one_or_none()
         return task
     
-    def create_task(self, task: TaskCreate) -> Tasks:
-        task_model = Tasks(name = task.name, pomodoro_count = task.pomodoro_count, category_id = task.category_id)
-        with self.db_session as session:
+    def create_task(self, task: TaskCreate, user_id: int) -> int:
+        task_model = Tasks(
+            name = task.name,
+            pomodoro_count = task.pomodoro_count,
+            category_id = task.category_id,
+            user_id=user_id
+        )
+        with self.db_session()as session:
             session.add(task_model)
             session.commit()
-            session.refresh(task_model)
-            return task_model
+            return task_model.id
 
     def update_task_name(self, task_id: int, name: str) -> Tasks:
-        query = update(Tasks).where(Tasks.id == task_id).values(name=name).returning(Tasks)
-        with self.db_session as session:
-            task_model = session.execute(query).scalar_one_or_none()
-            if task_model:
-                session.commit()    
-                session.refresh(task_model)
-            return task_model
+        query = update(Tasks).where(Tasks.id == task_id).values(name=name).returning(Tasks.id)
+        with self.db_session()as session:
+            task_id = session.execute(query).scalar_one_or_none()
+            session.commit()
+            return self.get_task(task_id)
 
     def delete_task(self, task_id: int) -> None:
         query = delete(Tasks).where(Tasks.id == task_id)
-        with self.db_session as session:
+        with self.db_session()as session:
             session.execute(query)
             session.commit()
 
     def get_task_by_category_name(self, category_name: str) -> list[Tasks]:
         query = select(Tasks).join(Categories, Tasks.category_id == Categories.id).where(Categories.name == category_name)
-        with self.db_session as session:
+        with self.db_session()as session:
             task: list[Tasks] = session.execute(query).scalars().all()
             return task
+        
+    def get_user_task(self, task_id: int, user_id: int) -> Tasks | None:
+        query =  select(Tasks).where(Tasks.id == task_id, Tasks.user_id == user_id)
+        with self.db_session()as session:
+            task: Tasks = session.execute(query).scalar_one_or_none()
+        return task
 
 
