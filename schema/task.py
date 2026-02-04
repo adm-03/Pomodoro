@@ -5,7 +5,8 @@ class TaskBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
     name: str | None = None
     pomodoro_count: int | None = None
-    category_id: int 
+    category_id: int
+    
 
     @model_validator(mode="after")
     def check_name_or_pomodoro_count_is_not_none(self):
@@ -20,4 +21,5 @@ class TaskCreate(TaskBase):
 # 3. Схема для GET (наследует валидатор + добавляет ID)
 class Task(TaskBase):
     id: int
+    user_id: int 
     
