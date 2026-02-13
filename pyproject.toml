@@ -20,6 +20,7 @@ dependencies = [
     "httpx (>=0.28.1,<0.29.0)",
     "asyncpg (>=0.31.0,<0.32.0)",
     "greenlet (>=3.3.1,<4.0.0)",
+    "poethepoet (>=0.41.0,<0.42.0)",
 ]
 
 [tool.poetry]
@@ -29,3 +30,10 @@ packages = [{include = "pomodoro_poetry", from = "src"}]
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poe]
+executor = "poetry"
+
+[tool.poe.tasks]
+serve = "uvicorn main:app --reload"
+test = "pytest"
