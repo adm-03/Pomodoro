@@ -4,14 +4,14 @@ from datetime import timedelta
 
 from jose import ExpiredSignatureError, JWTError, jwt
 
-from client import YandexClient
+from app.client import YandexClient
 from app.exception import TokenNotCorrect, UserNotFoundException, UserNotCorrectPasswordException, TokenExpired
-from models import UserProfile
-from schema import UserLoginSchema
-from repository import UserRepository
-from schema.user import UserCreateSchema
+from app.models import UserProfile
+from app.schema import UserLoginSchema
+from app.repository import UserRepository
+from app.schema.user import UserCreateSchema
 from app.settings import Settings
-from client import GoogleClient
+from app.client import GoogleClient
 
 @dataclass
 class AuthService:
@@ -38,6 +38,7 @@ class AuthService:
 
 
     def get_google_redirect_url(self) -> str:
+        print(self.settings.google_redirect_url)
         return self.settings.google_redirect_url
 
     def get_yandex_redirect_url(self) -> str:

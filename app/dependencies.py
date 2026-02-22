@@ -1,13 +1,13 @@
 from fastapi import Depends, HTTPException, Request, Security, security
 import httpx
 from sqlalchemy.ext.asyncio import AsyncSession
-from client import GoogleClient
-from client.yandex import YandexClient
+from app.client import GoogleClient
+from app.client.yandex import YandexClient
 from app.exception import TokenExpired, TokenNotCorrect
-from repository import *  # noqa: F403
-from infrastructure.database import get_db_session
-from infrastructure.cache import get_redis_connection
-from service import TaskService, UserService, AuthService
+from app.repository import *  # noqa: F403
+from app.infrastructure.database import get_db_session
+from app.infrastructure.cache import get_redis_connection
+from app.service import TaskService, UserService, AuthService
 from app.settings import Settings
 
 
@@ -34,8 +34,9 @@ def get_user_repository(
 ) -> UserRepository:
     return UserRepository(db_session=db_session)
 
-def get_async_client() -> httpx.AsyncClient:
-    return httpx.AsyncClient()
+async def get_async_client() -> httpx.AsyncClient:
+    async with httpx.AsyncClient() as client:
+        yield client
 
 
 def get_google_client(async_client: httpx.AsyncClient = Depends(get_async_client)) -> GoogleClient:

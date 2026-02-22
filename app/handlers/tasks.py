@@ -5,10 +5,10 @@ from app.dependencies import (
     get_task_service,
     get_request_user_id,
 )
-from repository import TaskRepository, CacheTask
+from app.repository import TaskRepository, CacheTask
 from fixtures import tasks as fixtures_tasks
-from schema import TaskCreate, Task
-from service import TaskService
+from app.schema import TaskCreate, Task
+from app.service import TaskService
 from typing import Annotated
 from app.exception import TaskNotFound
 
