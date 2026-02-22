@@ -1,7 +1,7 @@
 from dataclasses import dataclass
-from models import Tasks
-from repository import TaskRepository, CacheTask
-from schema import Task, TaskCreate
+from app.models import Tasks
+from app.repository import TaskRepository, CacheTask
+from app.schema import Task, TaskCreate
 from app.exception import TaskNotFound
 @dataclass
 class TaskService:
